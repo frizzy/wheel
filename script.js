@@ -11,6 +11,8 @@ function loadNames() {
   const savedNames = localStorage.getItem("wheelNames");
   if (savedNames) {
     namesTextArea.value = savedNames;
+  } else {
+    namesTextArea.value = "Salty 🧂\nSpicy 🌶️";
   }
   renderWheel();
 }
