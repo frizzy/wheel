@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <title>Spinning Wheel App</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,9 @@
     <div class="container p-8 bg-slate-800">
         <div class="flex gap-3">
             <div class="flex-none w-48">
-                <textarea class="bg-slate-700 rounded w-48 p-2 h-full text-slate-300" id="names" placeholder="Enter names, one per line"></textarea>
+                <ul class="bg-slate-700 rounded w-48 p-2 text-slate-300" id="namesList"></ul>
+                <input class="bg-slate-700 rounded w-48 p-2 text-slate-300 mt-2" type="text" id="newName" placeholder="Add new name" />
+                <button class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" id="addNameButton">Add</button>
             </div>
             <div class="flex-none w-500">    
                 <canvas id="wheel" width="500" height="500"></canvas>
@@ -36,7 +39,7 @@
                 <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="spinButton">Spin the Wheel</button>
             </div>
             <div class="flex-none w-500 text-center mt-3">
-                <span class="text-slate-300 p-3 text-lg" id="result"></span>
+                <span class="text-slate-300 p-3 text-lg cursor-pointer select-none" id="result"></span>
             </div>
             <div class="flex-none">
             </div>

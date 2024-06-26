@@ -2,36 +2,92 @@ const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const spinButton = document.getElementById("spinButton");
 const resultDiv = document.getElementById("result");
-const namesTextArea = document.getElementById("names");
+const namesList = document.getElementById("namesList");
+const newNameInput = document.getElementById("newName");
+const addNameButton = document.getElementById("addNameButton");
 
 let segmentColors = [];
 
+function getNames(exludeDisabled = false) {
+  return Array.from(namesList.children)
+    .map((li) => {
+      if (exludeDisabled && li.childNodes[1].getAttribute("disabled")) {
+        return null;
+      }
+      return li.childNodes[1].textContent;
+    })
+    .filter((name) => name !== null);
+}
+
 // Load names from localStorage
 function loadNames() {
-  const savedNames = localStorage.getItem("wheelNames");
+  const savedNames = JSON.parse(localStorage.getItem("wheelNames"));
   if (savedNames) {
-    namesTextArea.value = savedNames;
+    savedNames.forEach((name) => addNameToList(name));
   } else {
-    namesTextArea.value = "Salty 🧂\nSpicy 🌶️";
+    addNameToList("Salty 🧂");
+    addNameToList("Spicy 🌶️");
   }
   renderWheel();
 }
 
 // Save names to localStorage
 function saveNames() {
-  const names = namesTextArea.value;
-  localStorage.setItem("wheelNames", names);
+  const names = getNames();
+  localStorage.setItem("wheelNames", JSON.stringify(names));
   renderWheel();
 }
 
 spinButton.addEventListener("click", spinWheel);
-namesTextArea.addEventListener("input", saveNames);
+addNameButton.addEventListener("click", addName);
+newNameInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    addName();
+  }
+});
+
+function addName() {
+  const name = newNameInput.value.trim();
+  if (name) {
+    addNameToList(name);
+    newNameInput.value = "";
+    saveNames();
+  }
+}
+
+function addNameToList(name) {
+  const li = document.createElement("li");
+  li.classList.add("flex", "justify-between", "items-center", "mb-1");
+  li.innerHTML = `
+    <span class="cursor-pointer select-none" onclick="toggleSpan(this)">${name}</span>
+    <div>
+      <button class="text-sm" onclick="removeName(this)">❌</button>
+    </div>
+  `;
+  namesList.appendChild(li);
+}
+
+function toggleSpan(span) {
+  if (span.getAttribute("disabled") == null || !span.getAttribute("disabled")) {
+    console.log("disabled");
+    span.classList.add("line-through");
+    span.setAttribute("disabled", true);
+  } else {
+    console.log("enabled");
+    span.classList.remove("line-through");
+    span.removeAttribute("disabled");
+  }
+  renderWheel();
+}
+
+function removeName(button) {
+  const li = button.closest("li");
+  namesList.removeChild(li);
+  saveNames();
+}
 
 function renderWheel() {
-  const names = namesTextArea.value
-    .split("\n")
-    .map((name) => name.trim())
-    .filter((name) => name);
+  const names = getNames(true);
   if (names.length === 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     return;
@@ -55,8 +111,8 @@ function drawWheel(names) {
     ctx.arc(centerX, centerY, radius, i * segmentAngle, (i + 1) * segmentAngle);
     ctx.fillStyle = segmentColors[i];
     ctx.fill();
-    ctx.strokeStyle = "#1e293b";
-    ctx.stroke();
+    // ctx.strokeStyle = "#1e293b";
+    // ctx.stroke();
     ctx.save();
 
     ctx.translate(centerX, centerY);
@@ -69,22 +125,22 @@ function drawWheel(names) {
   }
 }
 
-function getRandomColor() {
-  return `hsl(${Math.random() * 360}, 100%, 75%)`;
-}
+const colorsEven = ["#40A578", "#9DDE8B"];
+const colorsOdd = ["#40A578", "#9DDE8B", "#E6FF94"];
 
 function generateSegmentColors(numSegments) {
   segmentColors = [];
+  const colors = numSegments % 2 === 0 ? colorsEven : colorsOdd;
+  const numColors = colors.length;
+
   for (let i = 0; i < numSegments; i++) {
-    segmentColors.push(getRandomColor());
+    segmentColors.push(colors[i % numColors]);
   }
 }
 
 function spinWheel() {
-  const names = namesTextArea.value
-    .split("\n")
-    .map((name) => name.trim())
-    .filter((name) => name);
+  newNameInput.focus();
+  const names = getNames(true);
   if (names.length === 0) {
     alert("Please enter some names.");
     return;
@@ -92,7 +148,7 @@ function spinWheel() {
 
   resultDiv.textContent = ""; // Hide result while spinning
 
-  const duration = 5000;
+  const duration = 7000;
   const rotations = Math.random() * 5 + 5; // Spin for 5-10 full rotations
   const endAngle = rotations * 2 * Math.PI;
   const startTime = performance.now();
