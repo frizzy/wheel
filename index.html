@@ -11,6 +11,9 @@
             extend: {
                 spacing: {
                     '500': '500px',
+                },
+                colors: {
+                    maintext: '#78ABA8',
                 }
             }
           }
@@ -19,26 +22,25 @@
 </head>
 <body class="bg-slate-800">
     <div class="container p-8 bg-slate-800">
-        <div class="flex gap-3">
+        <div class="flex">
             <div class="flex-none w-48">
                 <ul class="bg-slate-700 rounded w-48 p-2 text-slate-300" id="namesList"></ul>
                 <input class="bg-slate-700 rounded w-48 p-2 text-slate-300 mt-2" type="text" id="newName" placeholder="Add new name" />
                 <button class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" id="addNameButton">Add</button>
             </div>
-            <div class="flex-none w-500">    
+            <div class="ml-10 flex-none w-500">    
                 <canvas id="wheel" width="500" height="500"></canvas>
             </div>
             <div class="flex-none">
-                <div class="flex items-center h-full">
-                    <div class="w-0 h-0 border-t-[10px] border-t-transparent border-r-[15px] border-r-red-500 border-b-[10px] border-b-transparent"></div>
+                <div class="ml-1 flex items-center h-full">
+                    <div class="w-0 h-0 border-t-[20px] border-t-transparent border-r-[30px] border-r-red-500 border-b-[20px] border-b-transparent"></div>
                 </div>
             </div>
         </div>
-        <div class="flex gap-3 mt-3">
+        <div class="flex mt-3">
             <div class="flex-none w-48">
-                <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="spinButton">Spin the Wheel</button>
             </div>
-            <div class="flex-none w-500 text-center mt-3">
+            <div class="ml-10 flex-none w-500 text-center mt-3">
                 <span class="text-slate-300 p-3 text-lg cursor-pointer select-none" id="result"></span>
             </div>
             <div class="flex-none">

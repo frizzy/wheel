@@ -1,6 +1,5 @@
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
-const spinButton = document.getElementById("spinButton");
 const resultDiv = document.getElementById("result");
 const namesList = document.getElementById("namesList");
 const newNameInput = document.getElementById("newName");
@@ -38,7 +37,7 @@ function saveNames() {
   renderWheel();
 }
 
-spinButton.addEventListener("click", spinWheel);
+canvas.addEventListener("click", spinWheel);
 addNameButton.addEventListener("click", addName);
 newNameInput.addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
@@ -71,10 +70,14 @@ function toggleSpan(span) {
   if (span.getAttribute("disabled") == null || !span.getAttribute("disabled")) {
     console.log("disabled");
     span.classList.add("line-through");
+    span.classList.add("text-slate-500");
+    span.classList.remove("text-slate-300");
     span.setAttribute("disabled", true);
   } else {
     console.log("enabled");
     span.classList.remove("line-through");
+    span.classList.remove("text-slate-500");
+    span.classList.add("text-slate-300");
     span.removeAttribute("disabled");
   }
   renderWheel();
@@ -118,15 +121,15 @@ function drawWheel(names) {
     ctx.translate(centerX, centerY);
     ctx.rotate(i * segmentAngle + segmentAngle / 2);
     ctx.textAlign = "right";
-    ctx.fillStyle = "#1e293b";
+    ctx.fillStyle = "#0A1D56";
     ctx.font = "20px Helvetica, Arial, sans-serif";
     ctx.fillText(`${names[i]} `, radius - 10, 10);
     ctx.restore();
   }
 }
 
-const colorsEven = ["#40A578", "#9DDE8B"];
-const colorsOdd = ["#40A578", "#9DDE8B", "#E6FF94"];
+const colorsEven = ["#219C90", "#EE9322"];
+const colorsOdd = [...colorsEven, "#EE4E4E"];
 
 function generateSegmentColors(numSegments) {
   segmentColors = [];
@@ -173,7 +176,7 @@ function spinWheel() {
           ((2 * Math.PI - (angle % (2 * Math.PI))) / (2 * Math.PI)) *
             names.length
         ) % names.length;
-      resultDiv.textContent = `Winner: ${names[winningIndex]}`;
+      resultDiv.innerHTML = `Winner: <b class="font-medium text-maintext">${names[winningIndex]}</b>`;
     }
   }
 
