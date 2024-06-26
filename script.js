@@ -26,6 +26,7 @@ function loadNames() {
   } else {
     addNameToList("Salty 🧂");
     addNameToList("Spicy 🌶️");
+    addNameToList("Sweet 🍭");
   }
   renderWheel();
 }
