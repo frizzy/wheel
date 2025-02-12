@@ -151,6 +151,7 @@ function spinWheel() {
   }
 
   resultDiv.textContent = ""; // Hide result while spinning
+  resultDiv.classList.add('hidden')
 
   const duration = 7000;
   const rotations = Math.random() * 5 + 5; // Spin for 5-10 full rotations
@@ -177,7 +178,9 @@ function spinWheel() {
           ((2 * Math.PI - (angle % (2 * Math.PI))) / (2 * Math.PI)) *
             names.length
         ) % names.length;
-      resultDiv.innerHTML = `Winner: <b class="font-medium text-maintext">${names[winningIndex]}</b>`;
+      resultDiv.innerHTML = `<span class="text-maintext">Winner: <b class="font-medium text-maintext ">${names[winningIndex]}</b></span>`;
+      resultDiv.classList.remove('hidden')
+
     }
   }
 
@@ -188,5 +191,14 @@ function easeOutCubic(t) {
   return --t * t * t + 1;
 }
 
+// Randomly select background image
+function setRandomBackgroundImage() {
+  const backgroundNumber = Math.floor(Math.random() * 4) + 1; // Generates 1, 2, 3, or 4
+  document.body.style.backgroundImage = `url('static/zbg${backgroundNumber}.jpeg')`;
+}
+
 // Load names and render the wheel when the page is loaded
-window.onload = loadNames;
+window.onload = function() {
+  setRandomBackgroundImage();
+  loadNames();
+};
