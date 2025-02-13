@@ -5,6 +5,9 @@ const namesList = document.getElementById("namesList");
 const newNameInput = document.getElementById("newName");
 const addNameButton = document.getElementById("addNameButton");
 
+const spinEndSound = new Audio('static/tada.mp3');
+const spinSound = new Audio('static/spin.mp3');
+
 let segmentColors = [];
 
 function getNames(exludeDisabled = false) {
@@ -151,12 +154,14 @@ function spinWheel() {
   }
 
   resultDiv.textContent = ""; // Hide result while spinning
-  resultDiv.classList.add('hidden')
+  resultDiv.classList.add('hidden');
 
   const duration = 7000;
   const rotations = Math.random() * 5 + 5; // Spin for 5-10 full rotations
   const endAngle = rotations * 2 * Math.PI;
   const startTime = performance.now();
+
+  spinSound.volume = 0.5;
 
   function animateWheel(currentTime) {
     const elapsed = currentTime - startTime;
@@ -166,21 +171,30 @@ function spinWheel() {
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate(angle);
+
     ctx.translate(-canvas.width / 2, -canvas.height / 2);
     drawWheel(names);
     ctx.restore();
 
+
     if (progress < 1) {
       requestAnimationFrame(animateWheel);
     } else {
+
+      spinSound.pause();
+
       const winningIndex =
         Math.floor(
           ((2 * Math.PI - (angle % (2 * Math.PI))) / (2 * Math.PI)) *
             names.length
         ) % names.length;
+      spinEndSound.play();
       resultDiv.innerHTML = `<span class="text-maintext">Winner: <b class="font-medium text-maintext ">${names[winningIndex]}</b></span>`;
-      resultDiv.classList.remove('hidden')
-
+      resultDiv.classList.remove('hidden');
+      wheel.classList.add('page-shake');
+      setTimeout(() => {
+        wheel.classList.remove('page-shake');
+      }, 1000);
     }
   }
 
@@ -193,8 +207,20 @@ function easeOutCubic(t) {
 
 // Randomly select background image
 function setRandomBackgroundImage() {
-  const backgroundNumber = Math.floor(Math.random() * 4) + 1; // Generates 1, 2, 3, or 4
-  document.body.style.backgroundImage = `url('static/zbg${backgroundNumber}.jpeg')`;
+  const today = new Date();
+
+  console.log(today.getMonth(), today.getDate())
+
+  const isValentinesDay = today.getMonth() === 1 && today.getDate() === 14;
+  
+  if (isValentinesDay) {
+    // Use Valentine's Day specific background
+    document.body.style.backgroundImage = `url('static/vday.jpeg')`;
+  } else {
+    // Use existing random background selection
+    const backgroundNumber = Math.floor(Math.random() * 4) + 1; // Generates 1, 2, 3, or 4
+    document.body.style.backgroundImage = `url('static/zbg${backgroundNumber}.jpeg')`;
+  }
 }
 
 // Load names and render the wheel when the page is loaded
